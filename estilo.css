@@ -161,3 +161,13 @@ button.btn_delete svg {
   display: inline-block;
   padding: 0 12px;
 }
+
+.preview-area {
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid #0730c5;
+  border-radius: 15px;
+  background-color: #f5f7fd;
+  max-width: 900px;
+  text-align: center;
+}

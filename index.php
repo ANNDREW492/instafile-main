@@ -8,7 +8,8 @@ try {
         $mensaje = "Carpeta '$carpetaNombre' creada con éxito.";
     } else {
         $mensaje = "La carpeta '$carpetaNombre' ya existe.";
-    }
+    } 
+
 ///////////////////agrega parametros para subir solo cierto tipos de archivos
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_FILES['archivo'])) {
@@ -19,11 +20,11 @@ try {
             if (!in_array($archivo['type'], $tiposPermitidos)) {
                 $mensaje = "Error: Solo se permiten archivos JPEG, PNG y PDF.";
             }
-            // Verificar el tamaño del archivo (en este caso 5MB)
+            //tamaño del archivo 
             elseif ($archivo['size'] > 5 * 1024 * 1024) {
                 $mensaje = "Error: El archivo no puede ser mayor a 5MB.";
             }
-            // Si todo está bien, se subirá el archivo
+            // entonces subir archivo
             else {
                 if (move_uploaded_file($archivo['tmp_name'], $carpetaRuta . '/' . $archivo['name'])) {
                     $mensaje = "Archivo subido con éxito.";
@@ -146,7 +147,7 @@ if (isset($_SESSION['usuario'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compartir archivos</title>
     <script src="parametro.js"></script>
-    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="estilo.css"> 
 </head>
 
 <body>
@@ -202,6 +203,13 @@ if (isset($_SESSION['usuario'])) {
                                     </svg>
                                 </button>
                             </form>
+                             <!-- Botón de ojo para previsualizar -->
+                            <button class='btn_preview' onclick='previewFile(\"$file\")'>
+                                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                                    <path d='M12 4.5C6.75 4.5 3 12 3 12s3.75 7.5 9 7.5 9-7.5 9-7.5-3.75-7.5-9-7.5z' />
+                                    <circle cx='12' cy='12' r='3' />
+                                </svg>
+                            </button> 
                         </div>
                         </div>";
                         }
@@ -211,6 +219,15 @@ if (isset($_SESSION['usuario'])) {
                     ?>
                 </div>
             </div>
+                 <!-- Nuevo recuadro de previsualización -->
+        <div id="preview-area" class="preview-area">
+            <h3>Previsualización:</h3>
+         <div id="preview-content">
+                <!-- Aquí se mostrará la previsualización del archivo -->
+            </div>
+        </div>
+
+
         </div>
     </div>
     
@@ -224,7 +241,7 @@ if (isset($_SESSION['usuario'])) {
     <!-- <script src="parametro.js"></script> -->
 
 </body>
-
+<script src="preview.js"></script>
 </html>
 <?php
 }
