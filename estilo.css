@@ -45,6 +45,7 @@ h3 span {
   height: 450px;
   max-width: 900px;
   margin-top: 20px;
+  justify-content: space-between;
 
 }
 
@@ -163,11 +164,18 @@ button.btn_delete svg {
 }
 
 .preview-area {
-  margin-top: 20px;
-  padding: 20px;
-  border: 2px solid #0730c5;
-  border-radius: 15px;
-  background-color: #f5f7fd;
-  max-width: 900px;
-  text-align: center;
+  width: calc(100% - 40px); 
+  margin: 20px auto; 
+  background-color: #f5f7fd; 
+  padding: 20px; 
+  border-radius: 10px; 
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+#preview-content img {
+  max-width: 50%; /* Asegura que la imagen no exceda el ancho del contenedor */
+  max-height: 200px; /* Establece una altura máxima para la imagen */
+  object-fit: contain; /* Mantiene la proporción de la imagen */
+  display: block; /* Asegura que la imagen se comporte como un bloque */
+  margin: 0 auto; /* Centra la imagen horizontalmente */
 }

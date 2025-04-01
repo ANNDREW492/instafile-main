@@ -10,7 +10,7 @@ function previewFile(fileName) {
     const extension = fileName.split('.').pop().toLowerCase();
     if (extension === 'jpg' || extension === 'jpeg' || extension === 'png') {
         // Previsualizar imagen
-        previewContent.innerHTML = `<img src="${filePath}" alt="${fileName}" style="max-width: 100%; height: auto;">`;
+        previewContent.innerHTML = `<img src="${filePath}" alt="${fileName}" style="max-width: 50%; height: auto;">`;
     } else if (extension === 'pdf') {
         // Previsualizar PDF
         previewContent.innerHTML = `<iframe src="${filePath}" style="width: 100%; height: 500px;" frameborder="0"></iframe>`;

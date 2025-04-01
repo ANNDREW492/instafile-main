@@ -171,11 +171,9 @@ if (isset($_SESSION['usuario'])) {
                    <label> Arrastra tus archivos aquí<br>o</label>
                     <p><b>Abre el explorador</b></p> 
              </form>
-         </div>
+            </div>
 
             <div class="container2">
-               
-
                 <div id="file-list" class="pila">
                     <?php
                     $targetDir = $carpetaRuta;
@@ -219,16 +217,14 @@ if (isset($_SESSION['usuario'])) {
                     ?>
                 </div>
             </div>
-                 <!-- Nuevo recuadro de previsualización -->
-        <div id="preview-area" class="preview-area">
-            <h3>Previsualización:</h3>
-         <div id="preview-content">
+        </div>
+                <!-- Nuevo recuadro de previsualización -->
+            <div id="preview-area" class="preview-area">
+                <h3>Previsualización:</h3>
+                <div id="preview-content">
                 <!-- Aquí se mostrará la previsualización del archivo -->
+                </div>
             </div>
-        </div>
-
-
-        </div>
     </div>
     
     <?php
@@ -238,7 +234,6 @@ if (isset($_SESSION['usuario'])) {
                    </form>';
             }
         ?><br><br>
-    <!-- <script src="parametro.js"></script> -->
 
 </body>
 <script src="preview.js"></script>
