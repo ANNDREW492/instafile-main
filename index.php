@@ -1,40 +1,38 @@
 <?php
+session_start();
+$mensaje = "";
 $carpetaNombre = isset($_GET['nombre']) ? $_GET['nombre'] : '';
 $carpetaRuta = "./descarga/" . $carpetaNombre;
 
-try {
-    if (!file_exists($carpetaRuta)) {
-        mkdir($carpetaRuta, 0755, true);
-        $mensaje = "Carpeta '$carpetaNombre' creada con éxito.";
-    } else {
-        $mensaje = "La carpeta '$carpetaNombre' ya existe.";
-    } 
+// Crear carpeta si no existe
+if (!file_exists($carpetaRuta)) {
+    mkdir($carpetaRuta, 0755, true);
+    $mensaje = "Carpeta '$carpetaNombre' creada con éxito.";
+}
 
-///////////////////agrega parametros para subir solo cierto tipos de archivos
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_FILES['archivo'])) {
-            $archivo = $_FILES['archivo'];
-    
-            // Verificar el tipo de archivo
-            $tiposPermitidos = ['image/jpeg', 'image/png', 'application/pdf']; // son los Tipos permitidos
-            if (!in_array($archivo['type'], $tiposPermitidos)) {
-                $mensaje = "Error: Solo se permiten archivos JPEG, PNG y PDF.";
-            }
-            //tamaño del archivo 
-            elseif ($archivo['size'] > 5 * 1024 * 1024) {
-                $mensaje = "Error: El archivo no puede ser mayor a 5MB.";
-            }
-            // entonces subir archivo
-            else {
-                if (move_uploaded_file($archivo['tmp_name'], $carpetaRuta . '/' . $archivo['name'])) {
-                    $mensaje = "Archivo subido con éxito.";
-                } else {
-                    $mensaje = "Error al subir el archivo.";
-                }
+// Manejo de archivos
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Subida de archivo
+    if (isset($_FILES['archivo'])) {
+        $archivo = $_FILES['archivo'];
+        $tiposPermitidos = ['image/jpeg', 'image/png', 'application/pdf'];
+
+        // Verificar tipo y tamaño del archivo
+        if (!in_array($archivo['type'], $tiposPermitidos)) {
+            $mensaje = "Error: Solo se permiten archivos JPEG, PNG y PDF.";
+        } elseif ($archivo['size'] > 5 * 1024 * 1024) {
+            $mensaje = "Error: El archivo no puede ser mayor a 5MB.";
+        } else {
+            // Subir archivo
+            if (move_uploaded_file($archivo['tmp_name'], $carpetaRuta . '/' . $archivo['name'])) {
+                $mensaje = "Archivo subido con éxito.";
+            } else {
+                $mensaje = "Error al subir el archivo.";
             }
         }
     }
 
+    // Manejo de eliminación de archivos
     if (isset($_POST['eliminarArchivo'])) {
         $archivoAEliminar = $_POST['eliminarArchivo'];
         $archivoRutaAEliminar = $carpetaRuta . '/' . $archivoAEliminar;
@@ -43,17 +41,15 @@ try {
             if (unlink($archivoRutaAEliminar)) {
                 $mensaje = "Archivo '$archivoAEliminar' eliminado con éxito.";
             } else {
-                throw new Exception("Error al eliminar el archivo.");
+                $mensaje = "Error al eliminar el archivo.";
             }
         } else {
-            throw new Exception("El archivo '$archivoAEliminar' no existe.");
+            $mensaje = "El archivo '$archivoAEliminar' no existe.";
         }
     }
-} catch (Exception $e) {
-    $mensaje = "Error: " . htmlspecialchars($e->getMessage());
 }
 
-///////////////////////// Eliminar archivos antiguos (por ejemplo, mayores a 1 hora)
+// Eliminar archivos antiguos
 $archivos = scandir($carpetaRuta);
 foreach ($archivos as $archivo) {
     if ($archivo !== '.' && $archivo !== '..') {
@@ -63,19 +59,13 @@ foreach ($archivos as $archivo) {
         }
     }
 }
-?>
 
-<?php
-session_start();
-$mensaje = "";
-///////////////////////// INICIO DE SESION
+// Lógica de inicio de sesión
 if (!isset($_SESSION['usuario'])) {
-    // Si no está autenticado, mostrar el formulario de inicio de sesión
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuario = $_POST['usuario'];
         $contrasena = $_POST['contrasena'];
 
-        // Verificar credenciales (esto es un ejemplo básico)
         if ($usuario === 'admin' && $contrasena === '1234') {
             $_SESSION['usuario'] = $usuario;
             header('Location: ' . $_SERVER['PHP_SELF']);
@@ -85,7 +75,7 @@ if (!isset($_SESSION['usuario'])) {
         }
     }
 
-    // formulario de inicio de sesión
+    // Formulario de inicio de sesión
     echo '
     <!DOCTYPE html>
     <html lang="es">
@@ -113,32 +103,8 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-
-/////////////logica mensaje de error al no cumplir los archivos los requisitos
-$carpetaNombre = isset($_GET['nombre']) ? $_GET['nombre'] : '';
-$carpetaRuta = "./descarga/" . $carpetaNombre;
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_FILES['archivo'])) {
-        $archivo = $_FILES['archivo'];
-
-        // Verificación del tipo de archivo
-        $tiposPermitidos = ['image/jpeg', 'image/png', 'application/pdf'];
-        if (!in_array($archivo['type'], $tiposPermitidos)) {
-            $mensaje = "Error: Solo se permiten archivos JPEG, PNG y PDF.";
-        }
-        // Verificación del tamaño del archivo
-        elseif ($archivo['size'] > 5 * 1024 * 1024) { // 5MB
-            $mensaje = "Error: El archivo no puede ser mayor a 5MB.";
-        }
-    }
-}
-
-////verifica si el usuario esta autenticado
-if (isset($_SESSION['usuario'])) {
-    // contenido principal 
+// Si el usuario está autenticado, mostrar contenido principal
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -238,5 +204,3 @@ if (isset($_SESSION['usuario'])) {
 </body>
 <script src="preview.js"></script>
 </html>
-<?php
-}
