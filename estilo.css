@@ -98,7 +98,7 @@ form p{
 .Btn{
   background-color: #0730c5;
   z-index: 2; /*Superpone en el index*/
-  display: flex;
+  display: inline-flex;
   align-items: center;
   height: 30px;
   width: 150px;
